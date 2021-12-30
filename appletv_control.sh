@@ -11,8 +11,9 @@ device=""
 io=""
 characteristic=""
 option=""
-ATV_id="00:00:00:00:00:00"
+ATV_id="AA:BB:CC:DD:EE:FF"
 airplay_credentials="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+companion_credentials="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef"
 
 if [ $length -le 1 ]; then
    printf "Usage: $0 Get < AccessoryName > < Characteristic >\n"
@@ -104,9 +105,9 @@ if [ "${io}" == 'Set' ]; then
                ATV_POWER_STATE=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} power_state)
                if [ "${ATV_POWER_STATE}" = "PowerState.On" ]
                then
-                  /home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} turn_off
+                  /home/pi/.local/bin/atvremote --id ${ATV_id} --companion-credentials ${companion_credentials} turn_off
                else
-                  /home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} turn_on
+                  /home/pi/.local/bin/atvremote --id ${ATV_id} --companion-credentials ${companion_credentials} turn_on
                fi
                exit 0
                ;;
