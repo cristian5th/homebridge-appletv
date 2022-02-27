@@ -70,6 +70,10 @@ pip3 install --upgrade pyatv
 - Change airplay_credentials with the credentials given when pairing with the Apple TV
 - Change companion_credentials with the credentials given when pairing with the Apple TV
 
+## Known issues
+
+There is a known issue for pyatv if you have configured a Homepod to be the default audio output. In this case, you will always get the power to be ON (postlund/pyatv#1667).
+
 ## Many thanks to
 - [pyatv](https://github.com/postlund/pyatv)
 - [homebridge-cmd4](https://github.com/ztalbot2000/homebridge-cmd4)
