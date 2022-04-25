@@ -67,17 +67,10 @@ if [ "${io}" == "Get" ]; then
          case $characteristic in
             'On')
                # Get Apple TV play status
-               # If requested when Apple TV is off, it will switch on and this is unwanted
-               ATV_POWER_STATE=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} power_state)
-               if [ "${ATV_POWER_STATE}" = "PowerState.On" ]
+               ATV_PLAYING_STATE=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} playing | grep -oP '(?<=Device state: ).*')
+               if [ "${ATV_PLAYING_STATE}" = "Playing" ]
                then
-                  ATV_PLAYING_STATE=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} playing | grep -oP '(?<=Device state: ).*')
-                  if [ "${ATV_PLAYING_STATE}" = "Playing" ]
-                  then
-                     printf "1\n"
-                  else
-                     printf "0\n"
-                  fi
+                  printf "1\n"
                else
                   printf "0\n"
                fi
