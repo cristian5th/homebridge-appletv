@@ -83,6 +83,33 @@ if [ "${io}" == "Get" ]; then
          esac
          exit 0
          ;;
+      'Apple TV Video Play')
+         case $characteristic in
+            'On')
+               # Get Apple TV play status and media type
+               ATV_PLAYING=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} playing)
+               ATV_PLAYING_STATE=$(echo "$ATV_PLAYING" | grep -oP '(?<=Device state: ).*')
+               ATV_MEDIA_PLAYING=$(echo "$ATV_PLAYING" | grep -oP '(?<=Media type: ).*')
+               if [ "${ATV_PLAYING_STATE}" = "Playing" ]
+               then
+                  if [ "${ATV_MEDIA_PLAYING}" = "Video" ]
+                  then
+                     printf "1\n"
+                  else
+                     printf "0\n"
+                  fi
+               else
+                  printf "0\n"
+               fi
+               exit 0
+               ;;
+            *)
+               printf "UnHandled Get ${device}  Characteristic ${characteristic}\n"
+               exit -1
+               ;;
+         esac
+         exit 0
+         ;;
       *)
          printf "UnHandled Get ${device}  Characteristic ${characteristic}\n"
          exit -1

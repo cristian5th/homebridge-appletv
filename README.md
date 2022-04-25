@@ -57,8 +57,20 @@ pip3 install --upgrade pyatv
                 }
             ],
             "state_cmd": "bash /var/lib/homebridge/appletv_control.sh"
+        },
+        {
+            "type": "Switch",
+            "displayName": "Apple TV Video Play",
+            "on": "FALSE",
+            "queue": "A",
+            "polling": [
+                {
+                    "characteristic": "on"
+                }
+            ],
+            "state_cmd": "bash /var/lib/homebridge/appletv_control.sh"
         }
-   
+
 }
 ```
 
