@@ -14,6 +14,7 @@ option=""
 ATV_id="AA:BB:CC:DD:EE:FF"
 airplay_credentials="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 companion_credentials="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef:0123456789abcdef0123456789abcdef0123456789abcdef"
+atvremote_path="/home/pi/.local/bin/"
 
 if [ $length -le 1 ]; then
    printf "Usage: $0 Get < AccessoryName > < Characteristic >\n"
@@ -47,7 +48,7 @@ if [ "${io}" == "Get" ]; then
          case $characteristic in
             'On')
                # Get Apple TV power state
-               ATV_POWER_STATE=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} power_state)
+               ATV_POWER_STATE=$(${atvremote_path}atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} power_state)
                if [ "${ATV_POWER_STATE}" = "PowerState.On" ]
                then
                   printf "1\n"
@@ -67,7 +68,7 @@ if [ "${io}" == "Get" ]; then
          case $characteristic in
             'On')
                # Get Apple TV play status
-               ATV_PLAYING_STATE=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} playing | grep -oP '(?<=Device state: ).*')
+               ATV_PLAYING_STATE=$(${atvremote_path}atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} playing | grep -oP '(?<=Device state: ).*')
                if [ "${ATV_PLAYING_STATE}" = "Playing" ]
                then
                   printf "1\n"
@@ -87,14 +88,22 @@ if [ "${io}" == "Get" ]; then
          case $characteristic in
             'On')
                # Get Apple TV play status and media type
-               ATV_PLAYING=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} playing)
+               ATV_PLAYING=$(${atvremote_path}atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} playing)
                ATV_PLAYING_STATE=$(echo "$ATV_PLAYING" | grep -oP '(?<=Device state: ).*')
                ATV_MEDIA_PLAYING=$(echo "$ATV_PLAYING" | grep -oP '(?<=Media type: ).*')
-               if [ "${ATV_PLAYING_STATE}" = "Playing" ]
+               if [ "${ATV_MEDIA_PLAYING}" = "Video" ]
                then
-                  if [ "${ATV_MEDIA_PLAYING}" = "Video" ]
+                  if [ "${ATV_PLAYING_STATE}" = "Playing" ] || [ "${ATV_PLAYING_STATE}" = "Paused" ]
                   then
-                     printf "1\n"
+                     ATV_MEDIA_TITLE=$(echo "$ATV_PLAYING" | grep -oP '(?<=Title: ).*')
+                     # If title is some streaming address, then
+                     # this is my wife watching Shopping Queen and shutters must remain up
+                     if [[ $ATV_MEDIA_TITLE =~ ^rtsp://.* ]]
+                     then
+                        printf "0\n"
+                     else
+                        printf "1\n"
+                     fi
                   else
                      printf "0\n"
                   fi
@@ -122,12 +131,12 @@ if [ "${io}" == 'Set' ]; then
          case $characteristic in
             'On')
                # Get Apple TV current power state and switch accordingly
-               ATV_POWER_STATE=$(/home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} power_state)
+               ATV_POWER_STATE=$(${atvremote_path}atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} power_state)
                if [ "${ATV_POWER_STATE}" = "PowerState.On" ]
                then
-                  /home/pi/.local/bin/atvremote --id ${ATV_id} --companion-credentials ${companion_credentials} turn_off
+                  ${atvremote_path}atvremote --id ${ATV_id} --companion-credentials ${companion_credentials} turn_off
                else
-                  /home/pi/.local/bin/atvremote --id ${ATV_id} --companion-credentials ${companion_credentials} turn_on
+                  ${atvremote_path}atvremote --id ${ATV_id} --companion-credentials ${companion_credentials} turn_on
                fi
                exit 0
                ;;
@@ -142,7 +151,7 @@ if [ "${io}" == 'Set' ]; then
          case $characteristic in
             'On')
                # Toggle between play and pause
-               /home/pi/.local/bin/atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} play_pause
+               ${atvremote_path}atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} play_pause
                exit 0
                ;;
             *)
