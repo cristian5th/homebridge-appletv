@@ -96,13 +96,30 @@ if [ "${io}" == "Get" ]; then
                   if [ "${ATV_PLAYING_STATE}" = "Playing" ] || [ "${ATV_PLAYING_STATE}" = "Paused" ]
                   then
                      ATV_MEDIA_TITLE=$(echo "$ATV_PLAYING" | grep -oP '(?<=Title: ).*')
-                     # If title is some streaming address, then
-                     # this is my wife watching Shopping Queen and shutters must remain up
-                     if [[ $ATV_MEDIA_TITLE =~ ^rtsp://.* ]]
+                     # When Title is some streaming address or "DW News",
+                     # this is my wife watching Shopping Queen on VLC
+                     # and shutters must remain up.
+                     if [[ $ATV_MEDIA_TITLE =~ ^rtsp://.* ]] || [ "${ATV_MEDIA_TITLE}" = "DW News" ]
                      then
                         printf "0\n"
                      else
-                        printf "1\n"
+                        ATV_MEDIA_ALBUM=$(echo "$ATV_PLAYING" | grep -oP '(?<=Album: ).*')
+                        # When Title is unknown and Album is one of the following,
+                        # this is still my wife watching Shopping Queen on OQEE
+                        # and shutters must remain up.
+                        # Yes, Shopping Queen is very popular around here.
+                        if [ "${ATV_MEDIA_ALBUM}" = "Vox" ] || 
+                           [ "${ATV_MEDIA_ALBUM}" = "Arte Allemand" ] || 
+                           [ "${ATV_MEDIA_ALBUM}" = "RTL" ] || 
+                           [ "${ATV_MEDIA_ALBUM}" = "ProSieben" ] || 
+                           [ "${ATV_MEDIA_ALBUM}" = "Sat1" ] || 
+                           [ "${ATV_MEDIA_ALBUM}" = "NTV" ] || 
+                           [ "${ATV_MEDIA_ALBUM}" = "Welt" ]
+                        then
+                           printf "0\n"
+                        else
+                           printf "1\n"
+                        fi
                      fi
                   else
                      printf "0\n"
