@@ -13,11 +13,7 @@ $ /home/pi/.local/bin/atvremote --id AA:BB:CC:DD:EE:FF --protocol companion pair
 - Install [homebridge-cmd4](https://github.com/ztalbot2000/homebridge-cmd4) plugin.
 
 ### pyatv installation on Synology NAS
-> **Attention:** this installation is still not working due to a missing dependency:  
->`ModuleNotFoundError: No module named 'bitarray._bitarray'`  
->Despite for the bitarray package being already installed.
-
-- Install [homebridge Synology package](https://github.com/oznu/homebridge-syno-spk) and enable compiling native modules.
+- Install [Homebridge Synology package](https://github.com/oznu/homebridge-syno-spk) and enable compiling native modules.
 ```
 $ sudo su
 $ mkdir -p /volume1/@Entware/opt
@@ -39,6 +35,12 @@ $ /volume1/@Entware/opt/bin/atvremote scan
 $ /volume1/@Entware/opt/bin/atvremote --id AA:BB:CC:DD:EE:FF --protocol airplay pair
 $ /volume1/@Entware/opt/bin/atvremote --id AA:BB:CC:DD:EE:FF --protocol companion pair
 ```
+>**Note:** you may get an error when executing atvremote.  
+>`ModuleNotFoundError: No module named 'bitarray._bitarray'`  
+>Downgrading bitarray will solve the problem.
+>```
+>pip install --upgrade bitarray==2.3.7
+>```
 
 ## Upgrade
 - Upgrade [pyatv](https://github.com/postlund/pyatv) when new version is released.
@@ -47,6 +49,7 @@ pip3 install --upgrade pyatv
 ```
 
 ## Homebridge-cmd4 plugin configuration
+>**Note:** replace `/var/lib/homebridge/` with `/volume1/homebridge` when using a Synology NAS
 ```
 {
     "platform": "Cmd4",
@@ -103,6 +106,7 @@ pip3 install --upgrade pyatv
 ```
 
 ## Shell script `appletv_control.sh`
+>**Note:** replace `/var/lib/homebridge/` with `/volume1/homebridge` when using a Synology NAS
 
 - Place the script file inside the folder `/var/lib/homebridge/`
 - Set the script as executable with the command `chmod +x /var/lib/homebridge/appletv_control.sh`
@@ -115,5 +119,6 @@ pip3 install --upgrade pyatv
 There is a known issue for pyatv if you have configured a Homepod to be the default audio output. In this case, you will always get the power to be ON ([postlund/pyatv#1667](https://github.com/postlund/pyatv/issues/1667)).
 
 ## Many thanks to
-- [pyatv](https://github.com/postlund/pyatv)
-- [homebridge-cmd4](https://github.com/ztalbot2000/homebridge-cmd4)
+- [postlund/pyatv](https://github.com/postlund/pyatv)
+- [ztalbot2000/homebridge-cmd4](https://github.com/ztalbot2000/homebridge-cmd4)
+- [NorthernMan54/homebridge-cmd-television](https://github.com/NorthernMan54/homebridge-cmd-television)
