@@ -12,6 +12,34 @@ $ /home/pi/.local/bin/atvremote --id AA:BB:CC:DD:EE:FF --protocol companion pair
 
 - Install [homebridge-cmd4](https://github.com/ztalbot2000/homebridge-cmd4) plugin.
 
+### pyatv installation on Synology NAS
+> **Attention:** this installation is still not working due to a missing dependency:  
+>`ModuleNotFoundError: No module named 'bitarray._bitarray'`  
+>Despite for the bitarray package being already installed.
+
+- Install [homebridge Synology package](https://github.com/oznu/homebridge-syno-spk) and enable compiling native modules.
+```
+$ sudo su
+$ mkdir -p /volume1/@Entware/opt
+$ rm -rf /opt
+$ mkdir /opt
+$ mount -o bind "/volume1/@Entware/opt" /opt
+```
+For aarch64 (see [here](https://github.com/Entware/Entware/wiki/Install-on-Synology-NAS) for other architectures):
+```
+$ wget -O - https://bin.entware.net/aarch64-k3.10/installer/generic.sh | /bin/sh
+```
+
+- Install [pyatv](https://github.com/postlund/pyatv) and pair with the Apple TV.
+```
+$ opkg update
+$ opkg install python3 python3-pip python3-cffi python3-dev
+$ pip3 install pyatv
+$ /volume1/@Entware/opt/bin/atvremote scan
+$ /volume1/@Entware/opt/bin/atvremote --id AA:BB:CC:DD:EE:FF --protocol airplay pair
+$ /volume1/@Entware/opt/bin/atvremote --id AA:BB:CC:DD:EE:FF --protocol companion pair
+```
+
 ## Upgrade
 - Upgrade [pyatv](https://github.com/postlund/pyatv) when new version is released.
 ```
