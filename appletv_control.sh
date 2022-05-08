@@ -103,20 +103,26 @@ if [ "${io}" == "Get" ]; then
                      then
                         printf "0\n"
                      else
-                        ATV_MEDIA_ALBUM=$(echo "$ATV_PLAYING" | grep -oP '(?<=Album: ).*')
-                        # When Title is unknown and Album is one of the following,
-                        # this is still my wife watching Shopping Queen on OQEE
-                        # and shutters must remain up.
-                        # Yes, Shopping Queen is very popular around here.
-                        if [ "${ATV_MEDIA_ALBUM}" = "Vox" ] || 
-                           [ "${ATV_MEDIA_ALBUM}" = "Arte Allemand" ] || 
-                           [ "${ATV_MEDIA_ALBUM}" = "RTL" ] || 
-                           [ "${ATV_MEDIA_ALBUM}" = "ProSieben" ] || 
-                           [ "${ATV_MEDIA_ALBUM}" = "Sat1" ] || 
-                           [ "${ATV_MEDIA_ALBUM}" = "NTV" ] || 
-                           [ "${ATV_MEDIA_ALBUM}" = "Welt" ]
+                        ATV_MEDIA_ALBUM_COUNT=$(echo "$ATV_PLAYING" | grep -oP '(?<=Album: ).*' | wc -l)
+                        if [ "${ATV_MEDIA_ALBUM_COUNT}" -gt 0 ]
                         then
-                           printf "0\n"
+                           ATV_MEDIA_ALBUM=$(echo "$ATV_PLAYING" | grep -oP '(?<=Album: ).*')
+                           # When Title is unknown and Album is one of the following,
+                           # this is still my wife watching Shopping Queen on OQEE
+                           # and shutters must remain up.
+                           # Yes, Shopping Queen is very popular around here.
+                           if [ "${ATV_MEDIA_ALBUM}" = "Vox" ] || 
+                              [ "${ATV_MEDIA_ALBUM}" = "Arte Allemand" ] || 
+                              [ "${ATV_MEDIA_ALBUM}" = "RTL" ] || 
+                              [ "${ATV_MEDIA_ALBUM}" = "ProSieben" ] || 
+                              [ "${ATV_MEDIA_ALBUM}" = "Sat1" ] || 
+                              [ "${ATV_MEDIA_ALBUM}" = "NTV" ] || 
+                              [ "${ATV_MEDIA_ALBUM}" = "Welt" ]
+                           then
+                              printf "0\n"
+                           else
+                              printf "1\n"
+                           fi
                         else
                            printf "1\n"
                         fi
