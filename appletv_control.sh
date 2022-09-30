@@ -95,37 +95,17 @@ if [ "${io}" == "Get" ]; then
                then
                   if [ "${ATV_PLAYING_STATE}" = "Playing" ] || [ "${ATV_PLAYING_STATE}" = "Paused" ]
                   then
-                     ATV_MEDIA_TITLE=$(echo "$ATV_PLAYING" | grep -oP '(?<=Title: ).*')
-                     # When Title is some streaming address or "DW News",
-                     # this is my wife watching Shopping Queen on VLC
-                     # and shutters must remain up.
-                     if [[ $ATV_MEDIA_TITLE =~ ^rtsp://.* ]] || [ "${ATV_MEDIA_TITLE}" = "DW News" ]
+                     # Get active app
+                     ATV_APP=$(${atvremote_path}atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} app)
+                     ATV_ACTIVE_APP=$(echo "$ATV_APP" | grep -oP '(?<=App: ).*')
+                     kREGEX_TV='com\.apple\.TVWatchList'
+                     kREGEX_COMPUTERS='com\.apple\.TVHomeSharing'
+                     # Consider video playing only when app is TV or Computers
+                     if [[ $ATV_ACTIVE_APP =~ kREGEX_TV ]] || [ [ $ATV_ACTIVE_APP =~ kREGEX_COMPUTERS ]]
                      then
-                        printf "0\n"
+                        printf "1\n"
                      else
-                        ATV_MEDIA_ALBUM_COUNT=$(echo "$ATV_PLAYING" | grep -oP '(?<=Album: ).*' | wc -l)
-                        if [ "${ATV_MEDIA_ALBUM_COUNT}" -gt 0 ]
-                        then
-                           ATV_MEDIA_ALBUM=$(echo "$ATV_PLAYING" | grep -oP '(?<=Album: ).*')
-                           # When Title is unknown and Album is one of the following,
-                           # this is still my wife watching Shopping Queen on OQEE
-                           # and shutters must remain up.
-                           # Yes, Shopping Queen is very popular around here.
-                           if [ "${ATV_MEDIA_ALBUM}" = "Vox" ] || 
-                              [ "${ATV_MEDIA_ALBUM}" = "Arte Allemand" ] || 
-                              [ "${ATV_MEDIA_ALBUM}" = "RTL" ] || 
-                              [ "${ATV_MEDIA_ALBUM}" = "ProSieben" ] || 
-                              [ "${ATV_MEDIA_ALBUM}" = "Sat1" ] || 
-                              [ "${ATV_MEDIA_ALBUM}" = "NTV" ] || 
-                              [ "${ATV_MEDIA_ALBUM}" = "Welt" ]
-                           then
-                              printf "0\n"
-                           else
-                              printf "1\n"
-                           fi
-                        else
-                           printf "1\n"
-                        fi
+                        printf "0\n"
                      fi
                   else
                      printf "0\n"
