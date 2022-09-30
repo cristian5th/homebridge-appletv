@@ -101,7 +101,7 @@ if [ "${io}" == "Get" ]; then
                      kREGEX_TV='com\.apple\.TVWatchList'
                      kREGEX_COMPUTERS='com\.apple\.TVHomeSharing'
                      # Consider video playing only when app is TV or Computers
-                     if [[ $ATV_ACTIVE_APP =~ kREGEX_TV ]] || [ [ $ATV_ACTIVE_APP =~ kREGEX_COMPUTERS ]]
+                     if [[ $ATV_ACTIVE_APP =~ $kREGEX_TV ]] || [[ $ATV_ACTIVE_APP =~ $kREGEX_COMPUTERS ]]
                      then
                         printf "1\n"
                      else
