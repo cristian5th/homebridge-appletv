@@ -44,7 +44,7 @@ fi
 
 if [ "${io}" == "Get" ]; then
    case $device in
-      'Apple TV Power')
+      'ATV Power')
          case $characteristic in
             'On')
                # Get Apple TV power state
@@ -64,7 +64,7 @@ if [ "${io}" == "Get" ]; then
          esac
          exit 0
          ;;
-      'Apple TV Play State')
+      'ATV Play')
          case $characteristic in
             'On')
                # Get Apple TV play status
@@ -84,7 +84,7 @@ if [ "${io}" == "Get" ]; then
          esac
          exit 0
          ;;
-      'Apple TV Video Play')
+      'ATV Video Play')
          case $characteristic in
             'On')
                # Get Apple TV play status and media type
@@ -96,12 +96,11 @@ if [ "${io}" == "Get" ]; then
                   if [ "${ATV_PLAYING_STATE}" = "Playing" ] || [ "${ATV_PLAYING_STATE}" = "Paused" ]
                   then
                      # Get active app
-                     ATV_APP=$(${atvremote_path}atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} app)
-                     ATV_ACTIVE_APP=$(echo "$ATV_APP" | grep -oP '(?<=App: ).*')
+                     ATV_APP=$(${atvremote_path}atvremote --id ${ATV_id} --airplay-credentials ${airplay_credentials} app | grep -oP '(?<=App: ).*')
                      kREGEX_TV='com\.apple\.TVWatchList'
                      kREGEX_COMPUTERS='com\.apple\.TVHomeSharing'
                      # Consider video playing only when app is TV or Computers
-                     if [[ $ATV_ACTIVE_APP =~ $kREGEX_TV ]] || [[ $ATV_ACTIVE_APP =~ $kREGEX_COMPUTERS ]]
+                     if [[ $ATV_APP =~ $kREGEX_TV ]] || [[ $ATV_APP =~ $kREGEX_COMPUTERS ]]
                      then
                         printf "1\n"
                      else
@@ -130,7 +129,7 @@ if [ "${io}" == "Get" ]; then
 fi
 if [ "${io}" == 'Set' ]; then
    case $device in
-      'Apple TV Power')
+      'ATV Power')
          case $characteristic in
             'On')
                # Get Apple TV current power state and switch accordingly
@@ -150,7 +149,7 @@ if [ "${io}" == 'Set' ]; then
          esac
          exit 0
          ;;
-      'Apple TV Play State')
+      'ATV Play')
          case $characteristic in
             'On')
                # Toggle between play and pause

@@ -67,7 +67,7 @@ pip3 install --upgrade pyatv
     "accessories": [
         {
             "type": "Switch",
-            "displayName": "Apple TV Power",
+            "displayName": "ATV Power",
             "on": "FALSE",
             "queue": "A",
             "polling": [
@@ -79,12 +79,14 @@ pip3 install --upgrade pyatv
         },
         {
             "type": "Switch",
-            "displayName": "Apple TV Play State",
+            "displayName": "ATV Video Play",
             "on": "FALSE",
             "queue": "A",
             "polling": [
                 {
-                    "characteristic": "on"
+                    "characteristic": "on",
+                    "interval": 6,
+                    "timeout": 5000
                 }
             ],
             "state_cmd": "bash /var/lib/homebridge/appletv_control.sh"
