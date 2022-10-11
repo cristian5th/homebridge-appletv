@@ -79,14 +79,12 @@ pip3 install --upgrade pyatv
         },
         {
             "type": "Switch",
-            "displayName": "ATV Video Play",
+            "displayName": "ATV Play",
             "on": "FALSE",
             "queue": "A",
             "polling": [
                 {
-                    "characteristic": "on",
-                    "interval": 6,
-                    "timeout": 5000
+                    "characteristic": "on"
                 }
             ],
             "state_cmd": "bash /var/lib/homebridge/appletv_control.sh"
@@ -98,7 +96,9 @@ pip3 install --upgrade pyatv
             "queue": "A",
             "polling": [
                 {
-                    "characteristic": "on"
+                    "characteristic": "on",
+                    "interval": 6,
+                    "timeout": 5000
                 }
             ],
             "state_cmd": "bash /var/lib/homebridge/appletv_control.sh"
