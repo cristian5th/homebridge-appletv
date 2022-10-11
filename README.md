@@ -93,7 +93,7 @@ pip3 install --upgrade pyatv
         },
         {
             "type": "Switch",
-            "displayName": "Apple TV Video Play",
+            "displayName": "ATV Video Play",
             "on": "FALSE",
             "queue": "A",
             "polling": [
