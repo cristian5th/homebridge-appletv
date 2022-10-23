@@ -116,6 +116,12 @@ pip3 install --upgrade pyatv
 - Change airplay_credentials with the credentials given when pairing with the Apple TV
 - Change companion_credentials with the credentials given when pairing with the Apple TV
 
+**Some explanations about the Shell script:**
+The script offers three informational switches. Only two of them execute actions when activated.
+- *'ATV Power' switch will display the power status of the Apple TV.* The switch is shown activated when the Apple TV is other than stand-by mode and activated when the Apple TV is in stand-by mode. This switch sends an action to power on/off the Apple TV.
+- *'ATV Play' switch will display the playing state of the Apple TV.* The switch is shown activated when the Apple TV is playing and deactivated otherwise. This switch sends an action to play/pause the Apple TV.
+- *'ATV Video Play' switch will display a particular playing state of the Apple TV.* This switch has been programmed following personal preferences and you should update it to your particular needs. As it is, it will show activated when the Apple TV is playing/paused a video from the Apple TV app or the Home Sharing app and it will show deactivated otherwise. You may add other apps like Netfix, Disney, HBO,... If you want it to consider the playing/pause state regardless of the app being used, it is suggested to remove the code used to read the active app, as this request is taking quite long to answer, risking for Homebridge timeouts. This switch sends no action to the Apple TV and is merely used for automation purposes (close/open blinds and turn off/on lights when the movie starts/ends)
+
 ## Known issues
 
 There is a known issue for pyatv if you have configured a Homepod to be the default audio output. In this case, you will always get the power to be ON ([postlund/pyatv#1667](https://github.com/postlund/pyatv/issues/1667)).
